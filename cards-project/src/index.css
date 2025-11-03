@@ -1,0 +1,160 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: black;
+}
+
+html,
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background-color: rgba(0, 0, 0, 0.078);
+}
+
+
+.parent {
+  height: 100vh;
+  /* width: 75vw; */
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.main-heading {
+  background: #ffffff;
+  background: linear-gradient(326deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 1) 100%);
+  color: transparent;
+  background-clip: text;
+  margin-top: 50px;
+  font-size: 40px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.card {
+  height: 400px;
+  width: 330px;
+  background-color: white;
+  border-radius: 30px;
+  border: 1px solid white;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px 20px;
+  position: relative;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.top button {
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+  align-items: center;
+  height: 35px;
+  font-size: 15px;
+  background-color: transparent;
+  color: black;
+  padding: 01px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.395);
+  border-radius: 5px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.top button:hover {
+  border: 2px solid black;
+}
+
+.top img {
+  height: 60px;
+  width: 60px;
+  border: 1px solid grey;
+  border-radius: 30px;
+  padding: 7px;
+  object-fit: cover;
+}
+
+.center {
+  margin-top: 30px;
+
+}
+
+.center h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.center * {
+  color: black;
+}
+
+.center h3 {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.center span {
+  color: gray;
+  font-size: 14px;
+}
+
+.center button {
+  background-color: rgb(181 181 181 / 18%);
+  color: black;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btns {
+  display: flex;
+  gap: 10px;
+  /* background-color: yellow; */
+}
+
+
+
+.footer-right button {
+  background-color: black;
+  color: white;
+  padding: 7px 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.footer-left * {
+  color: black;
+}
+
+.footer {
+  position: absolute;
+  bottom: 30px;
+  width: calc(100% - 40px);
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.105);
+  margin: 100px 0;
+}
