@@ -1,56 +1,115 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { X } from 'lucide-react';
+import Toast from './components/Toast.jsx';
+import ErrorToast from './components/ErrorToast.jsx'
+import DeleteToast from './components/DeleteToast.jsx'
+import WarningToast from './components/WarningToast.jsx'
+
+
+
 const App = () => {
+
 
 
   const [title, setTitle] = useState("")
   const [text, setText] = useState("")
   const [task, setTask] = useState([])
-
+  const [toastVisibility, setToastVisibility] = useState(false);
+  const [errorToastVisibility, setErrorToastVisibility] = useState(false);
+  const [deleteToastVisibility, setDeleteToastVisibility] = useState(false);
+  const [warningToastVisibility, setWarningToastVisibility] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const copyTask = [...task];
-    copyTask.push({ title: title, text: text })
-    setTask(copyTask);
-    console.log('copytask',copyTask)
 
-    console.log(title);
-    console.log(text);
+    if (title != '' && text != '') {
+      copyTask.push({ title: title, text: text })
+      setToastVisibility(true);
+      setTimeout(() => {
+        setToastVisibility(false);
+      }, 3000);
+      setTask(copyTask);
+    }
+
+    if (title == '' || text == '') {
+      setErrorToastVisibility(true);
+      setTimeout(() => {
+        setErrorToastVisibility(false);
+      }, 3000);
+      return;
+    }
+
+    if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5) {
+      setWarningToastVisibility(true);
+      setTimeout(() => {
+        setWarningToastVisibility(false);
+      }, 3000);
+      return;
+    }
     setTitle("");
     setText("");
-    // Add note submission logic here
+
   };
 
 
-  const deleteNote = ()=>{
-    console.log('hiiiiiiiiii');
-    
+  const deleteNote = (idx) => {
+    const copyTask = [...task];
+    copyTask.splice(idx, 1)
+    setTask(copyTask)
   }
 
 
   return (
 
-    <div className='sm:h-screen sm:flex justify-between bg-black text-white p-5'>
-
-
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4 p-5 sm:w-1/2 '>
+    <div className='min-h-screen p-4 sm:flex justify-between bg-black text-white sm:p-5'>
+      <Toast visibility={toastVisibility} />
+      <ErrorToast visibility={errorToastVisibility} />
+      <WarningToast visibility={warningToastVisibility} />
+      <DeleteToast visibility={deleteToastVisibility} />
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4 sm:p-5 sm:w-1/2 '>
         <h1 className='text-center text-4xl font-extralight'>Add Notes</h1>
 
         {/* first input for heading */}
         <input
-          className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize'
+
+          className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize focus:border-2 '
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length < 1) {
+              e.target.style.border = "2px solid red";
+            }
+            else if (e.target.value.length > 10) {
+              e.target.style.border = "2px solid orange";
+            }
+            else {
+              e.target.style.border = "2px solid white";
+            }
+            setTitle(e.target.value)
+
+          }}
           placeholder="Enter Note Title"
         />
 
+        {/* Second input for content */}
         <textarea
-          className='border border-gray-300 rounded-md p-5 w-full outline-none h-32'
+
+          className='border border-gray-300 rounded-md p-5 w-full outline-none h-32 focus:border-2 '
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length < 1) {
+              e.target.style.border = "2px solid red";
+            }
+            else if (e.target.value.length > 50) {
+              e.target.style.border = "2px solid orange";
+            }
+            else {
+              e.target.style.border = "2px solid white";
+            }
+            setText(e.target.value)
+          }}
+
           placeholder="Enter Note Content">
         </textarea>
 
@@ -66,14 +125,30 @@ const App = () => {
 
         <h1 className='text-center text-4xl font-extralight'>Recent Notes</h1>
 
-        <div className="cards flex gap-y-5 gap-x-2 sm:gap-5 flex-wrap justify-center items-start mt-5  overflow-auto flex-1 max-h-105 sm:max-h-none pr-4">
-         {task.map((e,index)=>{
-          return <div key={index} className='relative w-40 rounded-2xl py-7 px-4 bg-[url("https://static.vecteezy.com/system/resources/previews/037/152/677/non_2x/sticky-note-paper-background-free-png.png")] bg-cover text-black flex flex-col wrap-break-word h-50 overflow-auto'>
-            <h2 onClick={deleteNote} className='absolute top-4 right-5 bg-red-700 text-white p-0.5 rounded-full cursor-pointer'><X size={18} strokeWidth={2} /> </h2>
-            <h3 className='text-2xl font-bold leading-tight'>{e.title}</h3>
-            <p className='whitespace-pre-wrap text-sm'>{e.text}</p>
-          </div>
-         })}
+        <div className="cards flex gap-5 flex-wrap justify-center items-start mt-5  overflow-auto flex-1 h-[90vh]  pr-4">
+          {task.map((e, index) => {
+            return <div key={index} className='relative w-65 rounded-2xl py-9.5 px-6 
+            bg-[url("https://static.vecteezy.com/system/resources/previews/037/152/677/non_2x/sticky-note-paper-background-free-png.png")]
+            bg-cover text-black flex flex-col wrap-break-word h-80 overflow-auto '>
+
+              <h2 onClick={() => {
+                let confirmation = confirm('Are you sure you want to delete this note?');
+                if (confirmation === true) {
+                  deleteNote(index)
+                  setDeleteToastVisibility(true);
+                  setTimeout(() => {
+                    setDeleteToastVisibility(false);
+                  }, 3000);
+                  return;
+                }
+                return;
+
+              }}
+                className='absolute top-8 right-6 bg-red-700 text-white p-1.5 rounded-full cursor-pointer'><X size={18} strokeWidth={2} /></h2>
+              <h3 className='text-2xl font-bold leading-tight capitalize'>{e.title}</h3>
+              <p className='whitespace-pre-wrap font-medium  leading-7 text-gray-700'>{e.text}</p>
+            </div>
+          })}
 
         </div>
 
