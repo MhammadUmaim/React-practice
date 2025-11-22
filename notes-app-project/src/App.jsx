@@ -19,6 +19,12 @@ const App = () => {
   const [deleteToastVisibility, setDeleteToastVisibility] = useState(false);
   const [warningToastVisibility, setWarningToastVisibility] = useState(false);
 
+  let date = new Date();
+  let month = date.getMonth() + 1;
+  let Name = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"][date.getDay()];
+  let year = date.getFullYear();
+  let currentDate = `${month}/${Name}/${year}`;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const copyTask = [...task];
@@ -26,6 +32,8 @@ const App = () => {
     if (title != '' && text != '') {
       copyTask.push({ title: title, text: text })
       setToastVisibility(true);
+      setTitle("");
+      setText("");
       setTimeout(() => {
         setToastVisibility(false);
       }, 3000);
@@ -34,6 +42,8 @@ const App = () => {
 
     if (title == '' || text == '') {
       setErrorToastVisibility(true);
+      setTitle("");
+      setText("");
       setTimeout(() => {
         setErrorToastVisibility(false);
       }, 3000);
@@ -42,6 +52,8 @@ const App = () => {
 
     if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5) {
       setWarningToastVisibility(true);
+      setTitle("");
+      setText("");
       setTimeout(() => {
         setWarningToastVisibility(false);
       }, 3000);
@@ -63,16 +75,17 @@ const App = () => {
   return (
 
     <div className='min-h-screen p-4 sm:flex justify-between bg-black text-white sm:p-5'>
+      {/* Toasts */}
       <Toast visibility={toastVisibility} />
       <ErrorToast visibility={errorToastVisibility} />
       <WarningToast visibility={warningToastVisibility} />
       <DeleteToast visibility={deleteToastVisibility} />
+
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 sm:p-5 sm:w-1/2 '>
         <h1 className='text-center text-4xl font-extralight'>Add Notes</h1>
 
         {/* first input for heading */}
         <input
-
           className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize focus:border-2 '
           type="text"
           value={title}
@@ -145,6 +158,7 @@ const App = () => {
 
               }}
                 className='absolute top-8 right-6 bg-red-700 text-white p-1.5 rounded-full cursor-pointer'><X size={18} strokeWidth={2} /></h2>
+              <p>{currentDate}</p>
               <h3 className='text-2xl font-bold leading-tight capitalize'>{e.title}</h3>
               <p className='whitespace-pre-wrap font-medium  leading-7 text-gray-700'>{e.text}</p>
             </div>
