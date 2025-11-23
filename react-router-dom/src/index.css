@@ -1,0 +1,38 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+.parent {
+  display: flex;
+  gap: 10px;
+  background-color: #004d4d;
+  justify-content: space-between;
+  padding: 15px 50px;
+  color: white;
+}
+
+.parent div a {
+  color: white;
+  text-decoration: none;
+}
+
+.parent div a:hover {
+  text-decoration: underline;
+}
+
+.links {
+  /* background-color: aqua; */
+  display: flex;
+  gap: 50px;
+}
+
+h1 {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-decoration: dashed underline;
+  padding-bottom: 2px;
+}
