@@ -3,16 +3,28 @@ import { useState } from 'react'
 const App = () => {
 
   const [data, setData] = useState([])
-  const user = {
+  const user = [
+    {
+    username: 'umaim',
+    age:18,
+    city:'karachi',
+    partner:'Pyari Tuba♥'
+  },
+   {
     username: 'umaim',
     age:18,
     city:'karachi',
     partner:'Pyari Tuba♥'
   }
+]
 
   localStorage.setItem('user', JSON.stringify(user))
-  const User = localStorage.getItem('user')
-  console.log(User)
+  const User = JSON.parse(localStorage.getItem('user') || '[]')
+  for (let i = 0; i < User.length; i++) {
+    const element = User[i];
+    console.log(element)
+  }
+    
   
   const getData = async () => {
     const data = await axios.get('https://picsum.photos/v2/list');

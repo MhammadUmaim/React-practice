@@ -1,45 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X } from 'lucide-react';
 import Toast from './components/Toast.jsx';
 import ErrorToast from './components/ErrorToast.jsx'
 import DeleteToast from './components/DeleteToast.jsx'
 import WarningToast from './components/WarningToast.jsx'
 
-
-
 const App = () => {
 
-
-
+  // notes states
   const [title, setTitle] = useState("")
   const [text, setText] = useState("")
-  const [task, setTask] = useState([])
+  const [task, setTask] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('note') || '[]')
+    } catch (e) {
+      console.error('Failed to parse saved notes:', e)
+      return []
+    }
+  })
+
+  // All Toasts
   const [toastVisibility, setToastVisibility] = useState(false);
   const [errorToastVisibility, setErrorToastVisibility] = useState(false);
   const [deleteToastVisibility, setDeleteToastVisibility] = useState(false);
   const [warningToastVisibility, setWarningToastVisibility] = useState(false);
 
+  // Date & Time 
   let date = new Date();
   let month = date.getMonth() + 1;
   let Name = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"][date.getDay()];
   let year = date.getFullYear();
-  let currentDate = `${month}/${Name}/${year}`;
+  let hours = date.getHours()
+  let mins = date.getMinutes()
+  if (hours > 12) { mins = mins + ' pm'}
+  let time = `${hours}:${mins}`
+  let currentDate = `${month}/${Name}/${year} -${time}`;
+
+  // Save notes to localStorage whenever task state changes
+  useEffect(() => {
+    localStorage.setItem('note', JSON.stringify(task))
+  }, [task])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const copyTask = [...task];
 
-    if (title != '' && text != '') {
-      copyTask.push({ title: title, text: text })
-      setToastVisibility(true);
-      setTitle("");
-      setText("");
-      setTimeout(() => {
-        setToastVisibility(false);
-      }, 3000);
-      setTask(copyTask);
-    }
-
+    // Validate inputs first
     if (title == '' || text == '') {
       setErrorToastVisibility(true);
       setTitle("");
@@ -59,9 +64,18 @@ const App = () => {
       }, 3000);
       return;
     }
+
+    // If validation passes, add the note
+    const copyTask = [...task];
+    copyTask.push({ title: title, text: text })
+    setTask(copyTask);
+
+    setToastVisibility(true);
     setTitle("");
     setText("");
-
+    setTimeout(() => {
+      setToastVisibility(false);
+    }, 3000);
   };
 
 
@@ -69,11 +83,12 @@ const App = () => {
     const copyTask = [...task];
     copyTask.splice(idx, 1)
     setTask(copyTask)
+    // localStorage is updated automatically by the useEffect watching task
   }
 
 
   return (
-
+  
     <div className='min-h-screen p-4 sm:flex justify-between bg-black text-white sm:p-5'>
       {/* Toasts */}
       <Toast visibility={toastVisibility} />
@@ -100,14 +115,12 @@ const App = () => {
               e.target.style.border = "2px solid white";
             }
             setTitle(e.target.value)
-
           }}
           placeholder="Enter Note Title"
         />
 
         {/* Second input for content */}
         <textarea
-
           className='border border-gray-300 rounded-md p-5 w-full outline-none h-32 focus:border-2 '
           value={text}
           onChange={(e) => {
